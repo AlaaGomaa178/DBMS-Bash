@@ -7,26 +7,26 @@ echo "                                      Main Menu                           
 echo "*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~~*~~~*~~~*~~~*~~~*~~~*~~~*"
 
 PS3="Main Menu : " # ==> change it based on menu 
-select DB in "Enter [C] to Create DB" "Enter [L] to List DBs" "Enter [D] to Drop DB" "Enter [S] to Connect to DB" "Enter [Q] to Exit"
+select DB in "Enter [1] to Create DB" "Enter [2] to List DBs" "Enter [3] to Drop DB" "Enter [4] to Connect to DB" "Enter [5] to Exit"
 do
     case $REPLY in
-        "C" | "c" ) 
+        1) 
             source ./createDB.sh
             createDB
         ;;
-        "L" | "l" ) 
+        2) 
             source ./listDB.sh
             listDB 
         ;;
-        "D" | "d" ) 
+        3) 
             source ./dropDB.sh
             dropDB
         ;;
-        "S" | "s" ) 
+        4) 
 	    source ./connecttoDB.sh
             connecttoDB
         ;;
-        "Q" | "q" ) #Exit
+        5) #Exit
             cd ..
             echo "*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~~*~~~*~~~*~~~*~~~*~~~*~~~*"
             echo "                                           BYE                                              "
@@ -56,31 +56,31 @@ main_menu
     echo "*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~~*~~~*~~~*~~~*~~~*~~~*~~~*"
 
     PS3="$DB_name Menu : " 
-    select Table in "Enter [C] to Create Table" "Enter [L] to List Tables" "Enter [D] to Drop Table" "Enter [I] to Insert into Table" "Enter [S] to Select from Table" "Enter [R] to Delete from Table" "Enter [U] to Update Table" "Enter [Q] to Exit"
+    select Table in "Enter [1] to Create Table" "Enter [2] to List Tables" "Enter [3] to Drop Table" "Enter [4] to Insert into Table" "Enter [5] to Select from Table" "Enter [6] to Delete from Table" "Enter [7] to Update Table" "Enter [8] to Exit"
     do
         case $REPLY in
-            "C" | "c" ) 
+            1) 
                 createTable
             ;;
-            "L" | "l" ) 
+            2) 
                 listTables
             ;;
-            "D" | "d" )
+            3)
                 dropTable
             ;;
-            "I" | "i" ) 
+            4) 
                 insert
             ;;
-            "S" | "s" ) 
+            5) 
                 selectfromtable
             ;;
-            "R" | "r" ) 
+            6) 
                 deletefromtable
             ;;
-            "U" | "u" ) 
+            7) 
                 updatetable
             ;;
-            "Q" | "q" ) # exit
+            8) # exit
                 cd ..
                 echo "*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~~*~~~*~~~*~~~*~~~*~~~*~~~*"
                 echo "                                        Main Menu                                           "
