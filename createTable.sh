@@ -59,6 +59,7 @@ done
 echo "You entered column number: $column_number"
 column_names=""
 column_data_types=""
+column_PK=""
 
 for ((i = 1; i <= $column_number; i++)); do
         while true; do
@@ -87,18 +88,39 @@ for ((i = 1; i <= $column_number; i++)); do
             esac
         done
 
+        while true; do
+            read -p "Do you want '$column_name' Primary key ? : (1) yes (2) no" primary_key
+            case $primary_key in
+            1)
+                PK="PK"
+                break
+                ;;
+            2)
+                PK="no"
+                break
+                ;;
+            *)
+                echo "Invalid choice! Please enter either 1 for Integer or 2 for String."
+                ;;
+            esac
+
+        done
+
         if [[ $i -eq 1 ]]; then
             column_names="$column_name"
             column_data_types="$data_type"
+            column_PK="$PK"
         else
             column_names="$column_names:$column_name"
             column_data_types="$column_data_types:$data_type"
+            column_PK="$column_PK:$PK"
         fi
 
     done
 
     echo "$column_names" >>$table_name.meta
     echo "$column_data_types" >>$table_name.meta
+    echo "$column_PK" >>$table_name.meta
 
     echo "==============================="
     echo "Table created successfully!!!!!!"
