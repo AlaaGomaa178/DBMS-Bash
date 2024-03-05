@@ -3,7 +3,7 @@
 connecttoDB(){
     read -p " >   Enter DB Name : " DB_name
     if [ -d $DB_name  ];then
-	cd $DB_name
+	#cd $DB_name
 	echo "$(pwd)"
 PS3="$DB_name: "
 
@@ -11,7 +11,8 @@ PS3="$DB_name: "
     do
         case $REPLY in
             "C" | "c" ) 
-                createTable
+            source ./createTable.sh
+                createTable $DB_name
             ;;
             "L" | "l" ) 
                 listTables
