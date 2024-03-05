@@ -57,35 +57,55 @@ while true; do
 done
 
 echo "You entered column number: $column_number"
+column_names=""
+column_data_types=""
 
-for (( i = 1 ; i <= $column_number ; i++ ))
-    do
-        while true;
-        do
-            read -p "Enter column name: " column_name
-            if [[ -z $column_name ]]  || [[ ! $column_name =~ ^[a-zA-Z]+[a-zA-Z0-9]*$  ]]; 
-            
-            then
-                echo "Column field must be charachters only"
+for ((i = 1; i <= $column_number; i++)); do
+        while true; do
+            read -p "Enter column name for column $i: " column_name
+            if [[ -z $column_name ]] || [[ ! $column_name =~ ^[a-zA-Z]+[a-zA-Z0-9]*$ ]]; then
+                echo "Column names must start with a letter and contain only letters and numbers."
             else
                 break
             fi
         done
-      
-        if (( $i == $column_number )); then
-            
-            echo "$column_name;" >> $table_name.meta
-            echo "==============================="
-            echo "Table created succefully!!!!!!"
-            echo "==============================="
-            cd ..
-            echo "$(pwd)"
-            source ./DBMS_Bash.sh 
-            main_menu
-            break
-        elif (( $i < $column_number )); then
-           echo -e "$column_name:\c" >> $table_name.meta
-        fi 
+
+        while true; do
+            read -p "Select data type for column '$column_name': (1) Integer (2) String: " data_type_choice
+            case $data_type_choice in
+            1)
+                data_type="Integer"
+                break
+                ;;
+            2)
+                data_type="String"
+                break
+                ;;
+            *)
+                echo "Invalid choice! Please enter either 1 for Integer or 2 for String."
+                ;;
+            esac
+        done
+
+        if [[ $i -eq 1 ]]; then
+            column_names="$column_name"
+            column_data_types="$data_type"
+        else
+            column_names="$column_names:$column_name"
+            column_data_types="$column_data_types:$data_type"
+        fi
+
     done
 
+    echo "$column_names" >>$table_name.meta
+    echo "$column_data_types" >>$table_name.meta
+
+    echo "==============================="
+    echo "Table created successfully!!!!!!"
+    echo "==============================="
+
+    cd ..
+    echo "$(pwd)"
+    source ./DBMS_Bash.sh
+    main_menu
 }
