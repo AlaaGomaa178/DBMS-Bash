@@ -11,7 +11,7 @@ connecttoDB(){
         selected_db=$DB_name
         echo "Selected DB: $selected_db"  
        
-        # return to the tables menu
+        # navigate to the tables menu
         source ./tablesMenu.sh
         tables_menu
            
