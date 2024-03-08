@@ -118,9 +118,9 @@ for ((i = 1; i <= $column_number; i++)); do
 
     done
 
-    echo "$column_names" >>$table_name.meta
-    echo "$column_data_types" >>$table_name.meta
-    echo "$column_PK" >>$table_name.meta
+    echo "COL_NAMES=\"$column_names\"" >> $table_name.meta
+    echo "COL_DATATYPES=\"$column_data_types\"" >> $table_name.meta
+    echo "COL_PK=\"$column_PK\"" >> $table_name.meta
 
     echo "==============================="
     echo "Table created successfully!!!!!!"
