@@ -20,7 +20,7 @@ tables_menu() {
                 dropTable
                 ;;
             "I" | "i" ) 
-                source ./insertIntoTable.sh
+                source ./insertIntoTables.sh
                 insertIntoTable 
                 ;;
             "S" | "s" ) 
