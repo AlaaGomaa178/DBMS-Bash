@@ -3,7 +3,6 @@
 createTable(){
     #echo $1
     cd $1
-    echo "$(pwd)"
     var='!@#$%^&*()/?\|'
     while true;
 do
@@ -92,7 +91,7 @@ for ((i = 1; i <= $column_number; i++)); do
             read -p "Do you want '$column_name' Primary key ? : (1) yes (2) no" primary_key
             case $primary_key in
             1)
-                PK="PK"
+                PK="yes"
                 break
                 ;;
             2)
@@ -127,7 +126,6 @@ for ((i = 1; i <= $column_number; i++)); do
     echo "==============================="
 
     cd ..
-    echo "$(pwd)"
-    source ./DBMS_Bash.sh
-    main_menu
+    source ./tablesMenu.sh
+    tables_menu
 }
