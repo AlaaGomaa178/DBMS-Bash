@@ -1,7 +1,6 @@
 #!/bin/bash
 
 tables_menu() {
-    # Prompt the user to enter their choice
     
     PS3="Enter your choice: " # ==> change it based on menu 
   
@@ -42,5 +41,4 @@ tables_menu() {
     done
 }
 
-# Call the function
 tables_menu
