@@ -1,55 +1,25 @@
-#! /bin/bash
+#!/bin/bash
+
+# Global variable to store the selected database name
+selected_db=""
 
 connecttoDB(){
     read -p " >   Enter DB Name : " DB_name
-    if [ -d $DB_name  ];then
-	#cd $DB_name
-	echo "$(pwd)"
-PS3="$DB_name: "
-
-	select Table in "Enter [C] to Create Table" "Enter [L] to List Tables" "Enter [D] to Drop Table" "Enter [I] to Insert into Table" "Enter [S] to Select from Table" "Enter [R] to Delete from Table" "Enter [U] to Update Table" "Enter [Q] to Exit"
-    do
-        case $REPLY in
-            "C" | "c" ) 
-            source ./createTable.sh
-                createTable $DB_name
-            ;;
-            "L" | "l" ) 
-                listTables
-            ;;
-            "D" | "d" )
-                dropTable
-            ;;
-            "I" | "i" ) 
-                insert
-            ;;
-            "S" | "s" ) 
-                selectfromtable
-            ;;
-            "R" | "r" ) 
-                deletefromtable
-            ;;
-            "U" | "u" ) 
-                updatetable
-            ;;
-            "Q" | "q" ) # exit
-                cd ..
-		echo "$(pwd)"
-		source ./DBMS_Bash.sh
-                main_menu
-	    ;;
-	    * )
-            echo "       Error, Invalid Choice    "
-		
-		;;
-   	 esac
-done
-
+    if [ -d "$DB_name" ]; then
+    
+        # Store the selected database name in a global variable
+        selected_db=$DB_name
+        echo "Selected DB: $selected_db"  
+       
+        # return to the tables menu
+        source ./tablesMenu.sh
+        tables_menu
            
     else
-        echo  "DB doesn't exist"
-	source ./DBMS_Bash.sh
-	main_menu
+        echo "DB doesn't exist"
+        source ./DBMS_Bash.sh
+        main_menu
     fi
-
 }
+
+connecttoDB
