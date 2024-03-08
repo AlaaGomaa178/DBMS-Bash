@@ -87,13 +87,13 @@ insertIntoTable() {
                 break
 
             else
-                echo "Table '$table_name' does not exist or metadata file is missing."
+                echo "Table '$table_name' does not exist in this DB"
             fi
 
         else
             echo "Invalid table name! Table names must start with a letter or underscore, followed by letters, digits, or underscores."
         fi
-        
+
     done
 }
 
