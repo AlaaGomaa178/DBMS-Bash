@@ -16,6 +16,7 @@ tables_menu() {
                 listTables
                 ;;
             "D" | "d" )
+                source ./dropTable.sh
                 dropTable
                 ;;
             "I" | "i" ) 
