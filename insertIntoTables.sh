@@ -19,8 +19,38 @@ insertIntoTable() {
                 IFS=":" read -r -a column_data_types_array <<< "$COL_DATATYPES"
                 IFS=":" read -r -a column_PK_array <<< "$COL_PK"
 
+                # Determine if PK should be automatically incremented
+                auto_increment_PK=false
+
+                # Find the index of the PK column
+                PK_index=-1
+                for ((i = 0; i < ${#column_names_array[@]}; i++)); 
+                do
+                    if [[ ${column_PK_array[i]} == "yes" ]]; 
+                    then
+                        PK_index=$i
+                        break
+                    fi
+                done
+
+                if [[ $PK_index == -1 ]]; 
+                then
+                    echo "No primary key column found in the table metadata."
+                    break
+                fi
+
+                read -rp "Do you want to automatically increment the primary key column? (yes/no): " auto_increment_choice
+                case $auto_increment_choice in
+                    "yes" | "Yes" | "YES" )
+                        auto_increment_PK=true
+                        ;;
+                    * )
+                        auto_increment_PK=false
+                        ;;
+                esac
+
                 # Find the last ID and increment it automatically 
-                last_id=$(cut -d':' -f1 "$db_name/$table_name" | sort -n | tail -n 1)
+                last_id=$(cut -d':' -f$((PK_index+1)) "$db_name/$table_name" | sort -n | tail -n 1)
                 
                 if [[ -z $last_id ]]; 
                 then
@@ -29,10 +59,10 @@ insertIntoTable() {
                     next_id=$((last_id + 1))
                 fi
 
-                # Let the user enter data for all of the columns except the obe who is a PK
+                # Let the user enter data for all of the columns
                 for ((i = 0; i < ${#column_names_array[@]}; i++)); 
                 do
-                    if [[ ${column_PK_array[i]} == "yes" ]]; 
+                    if [[ $i == $PK_index && $auto_increment_PK == true ]]; 
                     then
                         # Automatically increment PK
                         user_entry=$next_id
@@ -48,7 +78,19 @@ insertIntoTable() {
                                 "Integer" )
                                     if [[ $user_entry =~ ^[0-9]+$ ]]; 
                                     then
-                                        break
+                                        # Check if the PK value already exists in the PK column
+                                        if [[ $i == $PK_index && ${column_PK_array[i]} == "yes" ]]; 
+                                        then
+                                            if grep -q "^$user_entry:" "$db_name/$table_name"; 
+                                            then
+                                                echo "Primary key value '$user_entry' already exists in the table. Please enter a unique value."
+                                                continue
+                                            else
+                                                break
+                                            fi
+                                        else
+                                            break
+                                        fi
                                     else
                                         echo "Invalid input! Please enter an integer for ${column_names_array[i]}."
                                     fi
@@ -56,7 +98,19 @@ insertIntoTable() {
                                 "String" )
                                     if [[ ! -z $user_entry ]]; 
                                     then
-                                        break
+                                        # Check if the PK value already exists in the PK column
+                                        if [[ $i == $PK_index && ${column_PK_array[i]} == "yes" ]]; 
+                                        then
+                                            if grep -q "^$user_entry:" "$db_name/$table_name"; 
+                                            then
+                                                echo "Primary key value '$user_entry' already exists in the table. Please enter a unique value."
+                                                continue
+                                            else
+                                                break
+                                            fi
+                                        else
+                                            break
+                                        fi
                                     else
                                         echo "Invalid input! Please enter a non-empty string for ${column_names_array[i]}."
                                     fi
