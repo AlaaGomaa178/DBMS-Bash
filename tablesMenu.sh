@@ -30,7 +30,8 @@ tables_menu() {
                 deletefromtable
                 ;;
             "U" | "u" ) 
-                updatetable
+                source ./updateTable.sh
+                update_table
                 ;;
             "Q" | "q" ) # exit
                 source ./DBMS_Bash.sh
