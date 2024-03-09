@@ -5,16 +5,14 @@ selected_db=""
 
 connecttoDB(){
     read -p " >   Enter DB Name : " DB_name
-    if [ -d "$DB_name" ]; then
-    
+    if [ -d "$DB_name" ]; 
+    then
         # Store the selected database name in a global variable
-        selected_db=$DB_name
+        export selected_db=$DB_name
         echo "Selected DB: $selected_db"  
-       
-        # navigate to the tables menu
+        # Navigate to the tables menu
         source ./tablesMenu.sh
-        tables_menu
-           
+        tables_menu       
     else
         echo "DB doesn't exist"
         source ./DBMS_Bash.sh
