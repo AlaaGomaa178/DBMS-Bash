@@ -25,12 +25,10 @@ selectFromTable() {
                 do
                     case $choice in
                         
-                        
                         "SelectAll")
                             # Display all rows in the table
                             cat "$db_name/$table_name"
                             ;;
-                        
                         
                         "SelectSpecificRow")
                             # Loop to allow user to select rows based on specific column values
@@ -96,53 +94,39 @@ selectFromTable() {
                                 echo "Do you want to select another row? Enter 'y' to continue or any other key to cancel: "
                                 read answer
 
-                                if [[ $answer == "y" | "Y" ]]; 
+                                if [[ $answer == "y" || $answer == "Y" ]]; 
                                 then
                                     continueFlag=true
                                 else
+                                    continueFlag=false  # Update flag to exit the loop
                                     break
                                 fi
                             done
                             ;;
                             
-                            
                         "SelectColumns")
-                            
-                            # Associative array to store column positions
-                            declare -A col_positions  
-                            
+                            # Read metadata to get column names
                             source "$db_name/$table_name.meta"
                             IFS=':' read -r -a col_names <<< "$COL_NAMES"
                             
-                            for (( i=0; i<${#col_names[@]}; i++ )); 
+                            # Display column names for user to select
+                            echo "Available columns:"
+                            for ((i=0; i<${#col_names[@]}; i++)); 
                             do
-                                col_positions[${col_names[i]}]=$((i+1))
+                                echo "$((i+1)). ${col_names[i]}"
                             done
                             
                             # Prompt user to select a column
-                            echo "Please select the column:"
+                            read -rp "Please enter the number corresponding to the column you want to select: " column_number
                             
-                            select cname in "${col_names[@]}"; 
-                            do
-                                if [[ -n $cname ]]; then
-                            
-                                    # Check if the selected column exists
-                                    if [[ -n ${col_positions[$cname]} ]]; 
-                                    then
-                                        ColumnPosition=${col_positions[$cname]}
-                                        
-                                        # Display the selected column for all rows
-                                        awk -F':' -v column="$ColumnPosition" '{print $column}' "$db_name/$table_name"
-                                        break
-                                    else
-                                        echo "Invalid input! This column does not exist."
-                                    fi
-                                else
-                                    echo "Invalid choice!"
-                                fi
-                            done
+                            if [[ $column_number =~ ^[0-9]+$ && $column_number -ge 1 && $column_number -le ${#col_names[@]} ]]; 
+                            then
+                                # Display the selected column for all rows
+                                awk -F':' -v column="$column_number" '{print $column}' "$db_name/$table_name"
+                            else
+                                echo "Invalid input! Please enter a valid column number."
+                            fi
                             ;;
-                            
                             
                         "Back to Table Menu")
                             source ./tablesMenu.sh
@@ -165,5 +149,4 @@ selectFromTable() {
 
 }
 
-
-selectFromTable "$selected_db"
+selectFromTable
