@@ -104,6 +104,65 @@ selectFromTable() {
                                 fi
                             done
                             ;;
+
+                        "SelectColumns")
+                            
+                            # Associative array to store column positions
+                            declare -A col_positions  
+                            
+                            source "$db_name/$table_name.meta"
+                            IFS=':' read -r -a col_names <<< "$COL_NAMES"
+                            
+                            for (( i=0; i<${#col_names[@]}; i++ )); 
+                            do
+                                col_positions[${col_names[i]}]=$((i+1))
+                            done
+                            
+                            # Prompt user to select a column
+                            echo "Please select the column:"
+                            
+                            select cname in "${col_names[@]}"; 
+                            do
+                                if [[ -n $cname ]]; then
+                            
+                                    # Check if the selected column exists
+                                    if [[ -n ${col_positions[$cname]} ]]; 
+                                    then
+                                        ColumnPosition=${col_positions[$cname]}
+                                        
+                                        # Display the selected column for all rows
+                                        awk -F':' -v column="$ColumnPosition" '{print $column}' "$db_name/$table_name"
+                                        break
+                                    else
+                                        echo "Invalid input! This column does not exist."
+                                    fi
+                                else
+                                    echo "Invalid choice!"
+                                fi
+                            done
+                            ;;
+                            
+                            
+                        "Back to Table Menu")
+                            source ./tablesMenu.sh
+                            tables_menu
+                            ;;
+                            
+                    esac
+                    break  # Break from the select loop after processing each choice
+                done
+                
+            done
+            
+        else
+            echo "Table does not exist!"
+        fi
+        
+    else
+        echo "Invalid input! Table name must start with a letter or underscore, followed by letters, digits, or underscores."
+    fi
+    
+        
 }
     
 
