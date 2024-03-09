@@ -1,4 +1,4 @@
-    #!/bin/bash
+#!/bin/bash
 
 selectFromTable() {
 
@@ -31,7 +31,7 @@ selectFromTable() {
                             cat "$db_name/$table_name"
                             ;;
                         
-
+                        
                         "SelectSpecificRow")
                             # Loop to allow user to select rows based on specific column values
                             continueFlag=true
@@ -104,7 +104,8 @@ selectFromTable() {
                                 fi
                             done
                             ;;
-
+                            
+                            
                         "SelectColumns")
                             
                             # Associative array to store column positions
@@ -161,9 +162,8 @@ selectFromTable() {
     else
         echo "Invalid input! Table name must start with a letter or underscore, followed by letters, digits, or underscores."
     fi
-    
-        
+
 }
-    
+
 
 selectFromTable "$selected_db"
