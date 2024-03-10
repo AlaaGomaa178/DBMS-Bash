@@ -4,16 +4,16 @@
 createTable(){
     cd $1
     
-    #Regular expression pattern for allowed table names
+    # Regular expression pattern for allowed table names
     allowed_pattern='^[A-Za-z][A-Za-z0-9]*$'
     
-    # loop until a valid table name is provided
+    # Loop until a valid table name is provided
     while true;
     do
-        # let the user to enter the table name
+        # Let the user enter the table name
         read -p " >  Enter table name: " table_name
         
-        # Check if the table name already exists tell the user
+        # Check if the table name already exists
         if [[ -e "$table_name" ]]; then
             echo "Table '$table_name' already exists. Please choose a different name."
 
@@ -36,7 +36,8 @@ createTable(){
             touch $table_name
             touch $table_name.meta
             
-            create_column 
+            # Call the function to create columns 
+            create_column $table_name
         fi
     done
 }
@@ -44,7 +45,7 @@ createTable(){
 
 create_column(){
 
-    #loop until a valid number of columns is provided
+    # Loop until a valid number of columns is provided
     while true; do
         read -p " >  Enter number of columns: " column_number
         if [[ $column_number =~ ^[1-9]+$ ]]; 
@@ -74,6 +75,10 @@ create_column(){
     else
         PK_selected=false
     fi
+
+    # Arrays to store column names and whether they are selected as PK
+    declare -a columns
+    declare -a pks
 
     # Loop to iterate through each column and gather column details
     for ((i = 1; i <= $column_number; i++)); do
@@ -137,24 +142,46 @@ create_column(){
         fi
 
         # Append column details to the corresponding variables
-        if [[ $i -eq 1 ]]; then
-            column_names="$column_name"
-            column_data_types="$data_type"
-            column_PK="$PK"
-        else
-            column_names="$column_names:$column_name"
-            column_data_types="$column_data_types:$data_type"
-            column_PK="$column_PK:$PK"
-        fi
+        columns+=("$column_name")
+        pks+=("$PK")
 
     done
 
+    # If no column is selected as PK, prompt the user to choose one
+    if ! $PK_selected; then
+        echo "No primary key column was selected. Please choose one of the following columns to be the primary key as there must be a PK column:"
+        for ((i = 0; i < ${#columns[@]}; i++)); do
+            echo "$((i + 1)): ${columns[i]}"
+        done
+
+        while true; do
+            read -p "Enter the number of the column to be the primary key: " pk_choice
+            if [[ $pk_choice =~ ^[1-9]+$ ]] && [[ $pk_choice -le ${#columns[@]} ]]; then
+                pks[$((pk_choice - 1))]="yes"
+                break
+            else
+                echo "Invalid input! Please enter a valid column number."
+            fi
+        done
+    fi
+
+    # Construct metadata strings
+    for ((i = 0; i < ${#columns[@]}; i++)); do
+        if [[ $i -eq 0 ]]; then
+            column_names="${columns[i]}"
+            column_PK="${pks[i]}"
+        else
+            column_names+=":${columns[i]}"
+            column_PK+=":${pks[i]}"
+        fi
+    done
+
     # Write column details to the metadata file
-    echo "COL_NAMES=\"$column_names\"" >> $table_name.meta
-    echo "COL_DATATYPES=\"$column_data_types\"" >> $table_name.meta
-    echo "COL_PK=\"$column_PK\"" >> $table_name.meta
+    echo "COL_NAMES=\"$column_names\"" >> $1.meta
+    echo "COL_DATATYPES=\"$data_type\"" >> $1.meta
+    echo "COL_PK=\"$column_PK\"" >> $1.meta
 
-
+    # Display success message
     echo
     echo
     echo "                          ===================================="
@@ -163,7 +190,7 @@ create_column(){
     echo
     echo
 
-
+    # Return to the tables menu
     cd ..
     source ./tablesMenu.sh
     tables_menu
