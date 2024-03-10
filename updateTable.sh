@@ -111,12 +111,6 @@ update_table(){
                 fi
             done
 
-            # Check if a primary key column exists
-            if [[ $PK_index == -1 ]]; then
-                echo "No primary key column found in the table metadata."
-                return
-            fi
-
             # Validate condition value uniqueness for PK column
             if [[ $condition_column_num -eq $((PK_index + 1)) ]]; then
                 if grep -q "^$condition_value:" "$db_name/$table_name"; then
