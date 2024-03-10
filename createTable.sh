@@ -151,6 +151,32 @@ create_column(){
         pks+=("$PK")
     done
 
+    # If no column is selected as PK, prompt the user to choose one
+    if ! $PK_selected; then
+        echo
+        echo "No primary key column was selected. Please choose one of the following columns to be the primary key as there must be a PK column:"
+        echo
+        
+        for ((i = 0; i < ${#columns[@]}; i++)); do
+            echo "$((i + 1)): ${columns[i]}"
+        done
+
+        while true; do
+            echo
+            read -p "  >  Enter the number of the column to be the primary key: " pk_choice
+            echo
+            
+            if [[ $pk_choice =~ ^[1-9]+$ ]] && [[ $pk_choice -le ${#columns[@]} ]]; then
+                pks[$((pk_choice - 1))]="yes"
+                break
+            else
+                echo
+                echo "Invalid input! Please enter a valid column number."
+                echo
+            fi
+        done
+    fi
+
     # Construct metadata strings
     for ((i = 0; i < ${#columns[@]}; i++)); do
         if [[ $i -eq 0 ]]; then
@@ -178,9 +204,8 @@ create_column(){
     echo
     echo
 
-
+    # Return to the tables menu
     cd ..
     source ./tablesMenu.sh
     tables_menu
 }
-
