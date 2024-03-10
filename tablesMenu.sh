@@ -26,7 +26,7 @@ tables_menu() {
                 insertIntoTable 
                 ;;
             "S" | "s" ) 
-                source ./selectTables.sh
+                source ./selectFromTables.sh
                 selectFromTable 
                 ;;
             "R" | "r" ) 
