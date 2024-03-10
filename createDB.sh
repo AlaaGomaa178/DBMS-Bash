@@ -7,7 +7,7 @@ shopt -s extglob
 	createDB () {
     read -p " >   Enter DB Name : " DB_name
 
-    allowed_pattern='^[A-Za-z0-9]*$'
+    allowed_pattern='^[A-Za-z0-9]+$'
     while [[ ! $DB_name =~ $allowed_pattern || $DB_name =~ ^[0-9] ]]
     do
         echo  "      invalid name      "
