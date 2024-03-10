@@ -22,7 +22,7 @@ tables_menu() {
                 dropTable 
                 ;;
             "I" | "i" ) 
-                source ./insertIntoTable.sh
+                source ./insertIntoTables.sh
                 insertIntoTable 
                 ;;
             "S" | "s" ) 
@@ -30,7 +30,8 @@ tables_menu() {
                 selectFromTable 
                 ;;
             "R" | "r" ) 
-                deletefromtable
+                source ./deleteFromTable.sh
+                delete_from_table
                 ;;
             "U" | "u" ) 
                 source ./updateTable.sh
