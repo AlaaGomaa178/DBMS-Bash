@@ -41,13 +41,17 @@ insertIntoTable() {
                 # ask the user to choose how to enter the primary key
                 if [[ ${column_data_types_array[PK_index]} == "String" ]]; 
                 then
-                    echo "Primary key '${column_names_array[PK_index]}' is of type 'String'. You must enter the primary key value manually."
+                    echo
+                    echo "!!! Primary key '${column_names_array[PK_index]}' is of type 'String'. You must enter the primary key value manually !!!"
+                    echo
                     pk_choice=1  # Force manual entry
                 else
+                    echo
                     echo "Choose how to enter primary key:"
                     echo "1) Manually"
                     echo "2) Automatically"
-                    read -rp "Enter your choice: " pk_choice
+                    echo
+                    read -rp "  > Enter your choice: " pk_choice
                 fi
 
                 # Find the last ID and increment it automatically 
@@ -74,23 +78,30 @@ insertIntoTable() {
                             # Manually enter the PK
                             while true; 
                             do
-                                read -rp "Enter value for ${column_names_array[i]} (type: ${column_data_types_array[i]}): " user_entry
-                                
+                                echo
+                                read -rp "   > Enter value for ${column_names_array[i]} (type: ${column_data_types_array[i]}): " user_entry
+                                echo
+
                                 # Check the if string data type validations
                                 if [[ ${column_data_types_array[i]} == "String" && ( -z "$user_entry" || "$user_entry" == *:* ) ]]; 
                                 then
+                                    echo
                                     echo "Invalid input! Please enter a non-empty string without ':' for ${column_names_array[i]}."
-                                
+                                    echo
+
                                 # Check the if integer data type validations
                                 elif [[ ${column_data_types_array[i]} == "Integer" && ! $user_entry =~ ^[0-9]+$ ]]; 
                                 then
+                                    echo
                                     echo "Invalid input! Please enter an integer for ${column_names_array[i]}."
-                                
+                                    echo
+
                                 # Check if user-entered PK already exists
                                 elif cut -d: -f$((PK_index+1)) "$db_name/$table_name" | grep -q "^$user_entry"; 
                                 then
+                                    echo
                                     echo "Primary key '$user_entry' already exists. Please enter a different value."
-                                
+                                    echo
                                 else
                                     break
                                 fi
@@ -110,9 +121,11 @@ insertIntoTable() {
                         # Handle other column entries
                         while true; 
                         do
+                            echo
                             echo "Enter value for ${column_names_array[i]} (type: ${column_data_types_array[i]}):"
                             read user_entry
-                            
+                            echo
+
                             # Validate input based on data type
                             case ${column_data_types_array[i]} in
                             
@@ -122,7 +135,9 @@ insertIntoTable() {
                                     then
                                         break
                                     else
+                                        echo
                                         echo "Invalid input! Please enter an integer for ${column_names_array[i]}."
+                                        echo
                                     fi
                                     ;;
                                 
@@ -131,14 +146,18 @@ insertIntoTable() {
                                     # Validate string input
                                     if [[ -z "$user_entry" || "$user_entry" == *:* ]]; 
                                     then
+                                        echo
                                         echo "Invalid input! Please enter a non-empty string without ':' for ${column_names_array[i]}."
+                                        echo
                                     else
                                         break
                                     fi
                                     ;;
                                 
                                 *)
+                                    echo
                                     echo "Unsupported data type: ${column_data_types_array[i]}"
+                                    echo
                                     break
                                     ;;
                             esac
@@ -147,17 +166,22 @@ insertIntoTable() {
 
 
                     # Append user entry to the table file
+                    echo
                     echo -n "$user_entry:" >> "$db_name/$table_name"
+                    echo
                 done
 
 
                 # Add a newline at the end 
                 echo >> "$db_name/$table_name"
 
-                echo "========================="
-                echo "Data stored successfully."
-                echo "========================="
-                
+                echo
+                echo
+                echo "                          =================================="
+                echo "                          ~~~ Data stored successfully. ~~~"
+                echo "                          =================================="
+                echo
+                echo
 
                 # Return to the tables menu
                 source ./tablesMenu.sh
@@ -166,11 +190,16 @@ insertIntoTable() {
                 break
 
             else
+                
+                echo
                 echo "Table '$table_name' does not exist in this DB"
+                echo
             fi
 
         else
+            echo
             echo "Invalid table name! Table names must start with a letter or underscore, followed by letters, digits, or underscores."
+            echo
         fi
 
     done
