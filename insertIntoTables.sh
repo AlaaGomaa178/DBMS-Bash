@@ -2,10 +2,11 @@
 
 insertIntoTable() {
 
-    #The name of the currently selected database
+    # The name of the currently selected database
     local db_name="$selected_db"
 
-    while true; do
+    while true; 
+    do
         echo "Please enter the name of the table where you want to insert data:"
         read table_name
 
@@ -13,7 +14,7 @@ insertIntoTable() {
         if [[ $table_name =~ ^[a-zA-Z_][a-zA-Z0-9_]*$ ]]; 
         then
         
-            # Check if the table daya file and the meta fle exist
+            # Check if the table data file and the metadata file exist
             if [[ -f "$db_name/$table_name" && -f "$db_name/$table_name.meta" ]]; 
             then
                 source "$db_name/$table_name.meta"
@@ -42,8 +43,9 @@ insertIntoTable() {
                     break
                 fi
 
-                # Prompt the user to choose how to enter the primary key
-                if [[ ${column_data_types_array[PK_index]} == "String" ]]; then
+                # ask the user to choose how to enter the primary key
+                if [[ ${column_data_types_array[PK_index]} == "String" ]]; 
+                then
                     echo "Primary key '${column_names_array[PK_index]}' is of type 'String'. You must enter the primary key value manually."
                     pk_choice=1  # Force manual entry
                 else
@@ -56,7 +58,8 @@ insertIntoTable() {
                 # Find the last ID and increment it automatically 
                 last_id=$(cut -d':' -f1 "$db_name/$table_name" | sort -n | tail -n 1)
                 
-                if [[ -z $last_id ]]; then
+                if [[ -z $last_id ]]; 
+                then
                     next_id=1
                 else
                     next_id=$((last_id + 1))
@@ -72,20 +75,25 @@ insertIntoTable() {
                         if [[ $pk_choice == "1" ]]; 
                         then
                             
+                            
                             # Manually enter the PK
                             while true; 
                             do
                                 read -rp "Enter value for ${column_names_array[i]} (type: ${column_data_types_array[i]}): " user_entry
                                 
-                                
-                                
-                                # Check if user-entered PK already exists
-                                
+                                # Check the if string data type validations
                                 if [[ ${column_data_types_array[i]} == "String" && ( -z "$user_entry" || "$user_entry" == *:* ) ]]; 
                                 then
                                     echo "Invalid input! Please enter a non-empty string without ':' for ${column_names_array[i]}."
                                 
-                                elif cut -d: -f$((PK_index+1)) "$db_name/$table_name" | grep -q "^$user_entry"; then
+                                # Check the if integer data type validations
+                                elif [[ ${column_data_types_array[i]} == "Integer" && ! $user_entry =~ ^[0-9]+$ ]]; 
+                                then
+                                    echo "Invalid input! Please enter an integer for ${column_names_array[i]}."
+                                
+                                # Check if user-entered PK already exists
+                                elif cut -d: -f$((PK_index+1)) "$db_name/$table_name" | grep -q "^$user_entry"; 
+                                then
                                     echo "Primary key '$user_entry' already exists. Please enter a different value."
                                 
                                 else
@@ -95,11 +103,14 @@ insertIntoTable() {
                             
                         else
                             
+                            
                             # Automatically increment PK
                             user_entry=$next_id
                             next_id=$((next_id + 1))
                         fi
                     else
+                    
+                    
                     
                         # Handle other column entries
                         while true; 
@@ -109,19 +120,22 @@ insertIntoTable() {
                             
                             # Validate input based on data type
                             case ${column_data_types_array[i]} in
-                                
+                            
+                            
                                 "Integer" )
-                                    if [[ $user_entry =~ ^[0-9]+$ ]]; then
+                                    if [[ $user_entry =~ ^[0-9]+$ ]]; 
+                                    then
                                         break
                                     else
                                         echo "Invalid input! Please enter an integer for ${column_names_array[i]}."
                                     fi
                                     ;;
                                 
-                                "String" )
                                 
+                                "String" )
                                     # Validate string input
-                                    if [[ -z "$user_entry" || "$user_entry" == *:* ]]; then
+                                    if [[ -z "$user_entry" || "$user_entry" == *:* ]]; 
+                                    then
                                         echo "Invalid input! Please enter a non-empty string without ':' for ${column_names_array[i]}."
                                     else
                                         break
