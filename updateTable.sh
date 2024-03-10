@@ -60,6 +60,8 @@ update_table(){
                 print $0
             }
         ' "$db_name/$table_name" > "$db_name/$table_name.tmp" && mv "$db_name/$table_name.tmp" "$db_name/$table_name"
+#TEMP file helps integrity of the data, especially in case of unexpected errors during the update process, Backup.
+#Concurrency: If multiple processes or users are accessing the same file, writing to a temporary file ensures that other processes/users don't encounter inconsistent or corrupted data while the update is in progress.
 
         source ./tablesMenu.sh
                 tables_menu
