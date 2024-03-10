@@ -17,9 +17,17 @@ shopt -s extglob
     
 
     if [ -d $DB_name  ];then
-        echo  "DB already exist"
+        echo  ""
+        echo  ""
+        echo  "         DB already exists"
+        echo  ""
+        echo  ""
     else
         mkdir $DB_name
-        echo  "    database "$DB_name" is created"
+        echo  ""
+        echo  ""
+        echo  "  ~~~  Database "$DB_name" is created ~~~"
+        echo  ""
+        echo  ""
     fi
 }

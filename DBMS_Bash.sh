@@ -13,18 +13,22 @@ do
         1) 
             source ./createDB.sh
             createDB
+            main_menu
         ;;
         2) 
             source ./listDB.sh
             listDB 
+            main_menu
         ;;
         3) 
             source ./dropDB.sh
             dropDB
+            main_menu
         ;;
         4) 
-	    source ./connecttoDB.sh
+	        source ./connecttoDB.sh
             connecttoDB
+            main_menu
         ;;
         5) #Exit
             cd ..
