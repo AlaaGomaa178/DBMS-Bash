@@ -6,7 +6,7 @@ echo "*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~~*~~~*
 echo "                                      Main Menu                                             "
 echo "*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~*~~~~*~~~*~~~*~~~*~~~*~~~*~~~*"
 
-PS3="Main Menu : " # ==> change it based on menu 
+PS3="Enter your choice : " # ==> change it based on menu 
 select DB in "Enter [1] to Create DB" "Enter [2] to List DBs" "Enter [3] to Drop DB" "Enter [4] to Connect to DB" "Enter [5] to Exit"
 do
     case $REPLY in
