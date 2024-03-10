@@ -9,7 +9,7 @@ createTable(){
         if [[ ! $table_name =~ $allowed_pattern ]]; 
         then
             echo
-            echo "Invalid input! Name of table must start with a letter and contain only letters and numbers!"
+            echo "!!! Invalid input! Name of table must start with a letter and contain only letters and numbers!"
             echo
         elif [[ -z "$table_name" ]]; 
         then
@@ -35,13 +35,13 @@ create_column(){
             break
         else
             echo
-            echo "Invalid input! Please enter a number starting from 1."
+            echo " !!! Invalid input! Please enter a number starting from 1. !!!"
             echo
         fi
     done
 
     echo
-    echo "You entered $column_number columns."
+    echo "  You entered $column_number columns."
     echo
 
     column_names=""
@@ -53,7 +53,7 @@ create_column(){
             read -p " >  Enter column name for column $i: " column_name
             if [[ -z $column_name ]] || [[ ! $column_name =~ ^[a-zA-Z]+[a-zA-Z0-9]*$ ]]; then
                 echo
-                echo "Column names must start with a letter and contain only letters and numbers."
+                echo "!!! Column names must start with a letter and contain only letters and numbers !!!"
                 echo
             else
                 break
@@ -75,7 +75,7 @@ create_column(){
                 ;;
             *)
                 echo
-                echo "Invalid choice! Please enter either 1 for Integer or 2 for String."
+                echo "!!! Invalid choice! Please enter either 1 for Integer or 2 for String !!!"
                 echo
                 ;;
             esac
@@ -98,7 +98,7 @@ create_column(){
                     ;;
                 *)
                     echo
-                    echo "Invalid choice! Please enter either 1 for Yes or 2 for No."
+                    echo " !!! Invalid choice! Please enter either 1 for Yes or 2 for No !!!"
                     echo
                     ;;
                 esac
@@ -123,9 +123,9 @@ create_column(){
     echo "COL_DATATYPES=\"$column_data_types\"" >> $table_name.meta
     echo "COL_PK=\"$column_PK\"" >> $table_name.meta
 
-    echo "==============================="
-    echo "Table created successfully!"
-    echo "==============================="
+    echo "===================================="
+    echo " ~~~ Table created successfully! ~~~"
+    echo "===================================="
 
     cd ..
     source ./tablesMenu.sh

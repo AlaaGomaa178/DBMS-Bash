@@ -16,7 +16,7 @@ connecttoDB(){
         # Store the selected database name in a global variable
         export selected_db=$DB_name
         echo
-        echo " ~~~ Selected DB: $selected_db ~~~" 
+        echo "                        ~~~ Selected DB: $selected_db ~~~" 
         echo 
         # Navigate to the tables menu
         source ./tablesMenu.sh
