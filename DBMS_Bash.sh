@@ -39,11 +39,11 @@ do
         * )
             echo "       Error, Invalid Choice    "
             echo " Please Enter a correct choice
-                            C ==> Create DB
-                            L ==> List DBs
-                            D ==> Drop DB
-                            S ==> Connect to DB
-                            Q ==> Exit ' "
+                            1 ==> Create DB
+                            2 ==> List DBs
+                            3 ==> Drop DB
+                            4 ==> Connect to DB
+                            5 ==> Exit ' "
         ;;
     esac
 done
