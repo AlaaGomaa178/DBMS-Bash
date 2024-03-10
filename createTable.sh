@@ -1,24 +1,17 @@
 #! /bin/bash
 
 createTable(){
-    #echo $1
     cd $1
-    var='!@#$%^&*()/?\|'
+    allowed_pattern='^[A-Za-z][A-Za-z0-9]*$'
     while true;
     do
         read -p "Enter table name: " table_name
-        if  [[  $table_name =~ [0-9]+$ ]]; 
+        if [[ ! $table_name =~ $allowed_pattern ]]; 
         then
-            echo "Invalid input! Name of table cannot be numbers!"
-        elif [[ $table_name =~ [$var] ]]; 
-        then
-            echo "Invalid input! Name of table cannot contain special characters!"
+            echo "Invalid input! Name of table must start with a letter and contain only letters and numbers!"
         elif [[ -z "$table_name" ]]; 
         then
             echo "Invalid input! Name of table cannot be empty!"
-        elif [[  $table_name = *" "* ]]; 
-        then
-            echo "Invalid input! Name of table cannot contain spaces!"
         else 
             touch $table_name
             touch $table_name.meta
@@ -27,9 +20,9 @@ createTable(){
     done
 }
 
+
 create_column(){
 
-    declare -i coloum_number
     PK_selected=false
 
     while true; do
@@ -37,7 +30,7 @@ create_column(){
         if [[ $column_number =~ ^[1-9]+$ ]]; then
             break
         else
-            echo "Invalid input! Please enter a number from 1 to 9."
+            echo "Invalid input! Please enter a number starting from 1."
         fi
     done
 
