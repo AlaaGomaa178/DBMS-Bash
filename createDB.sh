@@ -10,7 +10,7 @@ shopt -s extglob
     allowed_pattern='^[A-Za-z0-9]+$'
     while [[ ! $DB_name =~ $allowed_pattern || $DB_name =~ ^[0-9] ]]
     do
-        echo  "      invalid name      "
+        echo  "      Invalid name! DB name must start with a letter and contain only letters and numbers!      "
         read -p "$ >   Enter DB Name : " DB_name
     done
 
