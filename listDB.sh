@@ -1,13 +1,13 @@
 #!/bin/bash
 
 listDB () {
-    if [ -z "$(ls -A)" ];
-    then
-        echo " There is no DBs"
+    if [ -z "$(find . -maxdepth 1 -type d -not -name '.*' -exec basename {} \;)" ]; then
+        echo "There are no visible DBs"
     else
-        echo "The Founded DBs"
+        echo "The Found DBs:"
         echo 
-                find . -maxdepth 1 -type d -exec basename {} \;
+        find . -maxdepth 1 -type d -not -name '.*' -exec basename {} \;
         echo
     fi
 }
+
