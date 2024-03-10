@@ -5,13 +5,17 @@ createTable(){
     allowed_pattern='^[A-Za-z][A-Za-z0-9]*$'
     while true;
     do
-        read -p "Enter table name: " table_name
+        read -p " >  Enter table name: " table_name
         if [[ ! $table_name =~ $allowed_pattern ]]; 
         then
+            echo
             echo "Invalid input! Name of table must start with a letter and contain only letters and numbers!"
+            echo
         elif [[ -z "$table_name" ]]; 
         then
+            echo
             echo "Invalid input! Name of table cannot be empty!"
+            echo
         else 
             touch $table_name
             touch $table_name.meta
@@ -26,15 +30,19 @@ create_column(){
     PK_selected=false
 
     while true; do
-        read -p "Enter number of columns: " column_number
+        read -p " >  Enter number of columns: " column_number
         if [[ $column_number =~ ^[1-9]+$ ]]; then
             break
         else
+            echo
             echo "Invalid input! Please enter a number starting from 1."
+            echo
         fi
     done
 
+    echo
     echo "You entered $column_number columns."
+    echo
 
     column_names=""
     column_data_types=""
@@ -42,16 +50,20 @@ create_column(){
 
     for ((i = 1; i <= $column_number; i++)); do
         while true; do
-            read -p "Enter column name for column $i: " column_name
+            read -p " >  Enter column name for column $i: " column_name
             if [[ -z $column_name ]] || [[ ! $column_name =~ ^[a-zA-Z]+[a-zA-Z0-9]*$ ]]; then
+                echo
                 echo "Column names must start with a letter and contain only letters and numbers."
+                echo
             else
                 break
             fi
         done
 
         while true; do
+            echo
             read -p "Select data type for column '$column_name': (1) Integer (2) String: " data_type_choice
+            echo
             case $data_type_choice in
             1)
                 data_type="Integer"
@@ -62,14 +74,18 @@ create_column(){
                 break
                 ;;
             *)
+                echo
                 echo "Invalid choice! Please enter either 1 for Integer or 2 for String."
+                echo
                 ;;
             esac
         done
 
         if ! $PK_selected; then
             while true; do
+                echo
                 read -p "Do you want '$column_name' to be the Primary key? (1) Yes (2) No, if you chose 'yes' this will be the only PK as only one PK is allowed: " primary_key
+                echo
                 case $primary_key in
                 1)
                     PK="yes"
@@ -81,7 +97,9 @@ create_column(){
                     break
                     ;;
                 *)
+                    echo
                     echo "Invalid choice! Please enter either 1 for Yes or 2 for No."
+                    echo
                     ;;
                 esac
             done
