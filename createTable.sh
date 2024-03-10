@@ -112,31 +112,37 @@ create_column(){
             esac
         done
 
-        # If the primary key is not selected yet, ask the user if this column should be the primary key
-        if ! $PK_selected; then
-            while true; do
-                echo
-                read -p "Do you want '$column_name' to be the Primary key? (1) Yes (2) No, if you chose 'yes' this will be the only PK as only one PK is allowed: " primary_key
-                echo
-                case $primary_key in
-                1)
-                    PK="yes"
-                    PK_selected=true
-                    break
-                    ;;
-                2)
-                    PK="no"
-                    break
-                    ;;
-                *)
-                    echo
-                    echo " !!! Invalid choice! Please enter either 1 for Yes or 2 for No !!!"
-                    echo
-                    ;;
-                esac
-            done
+        # If there's only one column, set it as the primary key
+        if [[ $column_number -eq 1 ]]; then
+            PK="yes"
+            PK_selected=true
         else
-            PK="no"
+            # If the primary key is not selected yet, ask the user if this column should be the primary key
+            if ! $PK_selected; then
+                while true; do
+                    echo
+                    read -p "Do you want '$column_name' to be the Primary key? (1) Yes (2) No, if you chose 'yes' this will be the only PK as only one PK is allowed: " primary_key
+                    echo
+                    case $primary_key in
+                    1)
+                        PK="yes"
+                        PK_selected=true
+                        break
+                        ;;
+                    2)
+                        PK="no"
+                        break
+                        ;;
+                    *)
+                        echo
+                        echo " !!! Invalid choice! Please enter either 1 for Yes or 2 for No !!!"
+                        echo
+                        ;;
+                    esac
+                done
+            else
+                PK="no"
+            fi
         fi
 
         # Append column details to the corresponding variables
@@ -144,32 +150,6 @@ create_column(){
         data_types+=("$data_type")
         pks+=("$PK")
     done
-
-    # If no column is selected as PK, prompt the user to choose one
-    if ! $PK_selected; then
-        echo
-        echo "No primary key column was selected. Please choose one of the following columns to be the primary key as there must be a PK column:"
-        echo
-        
-        for ((i = 0; i < ${#columns[@]}; i++)); do
-            echo "$((i + 1)): ${columns[i]}"
-        done
-
-        while true; do
-            echo
-            read -p "  >  Enter the number of the column to be the primary key: " pk_choice
-            echo
-            
-            if [[ $pk_choice =~ ^[1-9]+$ ]] && [[ $pk_choice -le ${#columns[@]} ]]; then
-                pks[$((pk_choice - 1))]="yes"
-                break
-            else
-                echo
-                echo "Invalid input! Please enter a valid column number."
-                echo
-            fi
-        done
-    fi
 
     # Construct metadata strings
     for ((i = 0; i < ${#columns[@]}; i++)); do
@@ -198,8 +178,9 @@ create_column(){
     echo
     echo
 
-    # Return to the tables menu
+
     cd ..
     source ./tablesMenu.sh
     tables_menu
 }
+
