@@ -112,23 +112,31 @@ update_table(){
                 return
             fi
 
-            # Validate condition value uniqueness for PK column
-            if [[ $condition_column_num -ne $((PK_index + 1)) ]]; 
+            # Validate uniqueness of the new value in the PK column
+            if [[ $edit_column_num -eq $((PK_index + 1)) ]]; 
             then
-                if grep -q "^$condition_value:" "$db_name/$table_name"; 
+                if grep -q "^$new_value:" "$db_name/$table_name"; 
                 then
-                    echo "Value '$condition_value' already exists in the specified column. Please enter a different value for the condition."
+                    echo "Primary key '$new_value' already exists. Please enter a different value for the new value."
                     continue
                 fi
             fi
 
             # Update the corresponding value in the data file based on the condition
-            awk -F':' -v edit_col="$edit_column_num" -v new_val="$new_value" -v cond_col="$condition_column_num" -v cond_val="$condition_value" '
+            awk -F':' -v edit_col="$edit_column_num" -v new_val="$new_value" -v cond_col="$condition_column_num" -v cond_val="$condition_value" -v pk_index="$((PK_index + 1))" '
                 BEGIN {OFS=":"; found=0}
                 {
                     if ($cond_col == cond_val) {
                         found=1
-                        $edit_col = new_val
+                        if (edit_col != pk_index || !seen[new_val]) {
+                            $edit_col = new_val
+                            if (edit_col == pk_index) {
+                                seen[$edit_col] = 1
+                            }
+                        } else {
+                            print "Primary key value '" new_val "' already exists. Please enter a different value for the new value." > "/dev/stderr"
+                            exit 1
+                        }
                     }
                     print $0
                 }
@@ -155,3 +163,6 @@ update_table(){
         fi
     done
 }
+
+# Call the function to update the table
+update_table
