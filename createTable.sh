@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/bin/bash
 
 createTable(){
     cd $1
@@ -81,33 +81,19 @@ create_column(){
             esac
         done
 
-        if ! $PK_selected; then
-            while true; do
-                echo
-                read -p "Do you want '$column_name' to be the Primary key? (1) Yes (2) No, if you chose 'yes' this will be the only PK as only one PK is allowed: " primary_key
-                echo
-                case $primary_key in
-                1)
-                    PK="yes"
-                    PK_selected=true
-                    break
-                    ;;
-                2)
-                    PK="no"
-                    break
-                    ;;
-                *)
-                    echo
-                    echo " !!! Invalid choice! Please enter either 1 for Yes or 2 for No !!!"
-                    echo
-                    ;;
-                esac
-            done
+        if [[ $i -eq 1 && $column_number -eq 1 ]]; 
+        then
+        
+            echo "You created only 1 column, so it must be a PK column."
+            PK="yes"
+            PK_selected=true
+            
         else
             PK="no"
         fi
 
-        if [[ $i -eq 1 ]]; then
+        if [[ $i -eq 1 ]]; 
+        then
             column_names="$column_name"
             column_data_types="$data_type"
             column_PK="$PK"
@@ -123,12 +109,17 @@ create_column(){
     echo "COL_DATATYPES=\"$column_data_types\"" >> $table_name.meta
     echo "COL_PK=\"$column_PK\"" >> $table_name.meta
 
-    echo "===================================="
-    echo " ~~~ Table created successfully! ~~~"
-    echo "===================================="
+    echo
+    echo
+    echo "                          ===================================="
+    echo "                          ~~~ Table created successfully! ~~~"
+    echo "                          ===================================="
+    echo
+    echo
 
     cd ..
     source ./tablesMenu.sh
     tables_menu
 }
+
 
