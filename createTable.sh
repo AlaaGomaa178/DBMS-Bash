@@ -15,7 +15,9 @@ createTable(){
         
         # Check if the table name already exists
         if [[ -e "$table_name" ]]; then
+            echo
             echo "Table '$table_name' already exists. Please choose a different name."
+            echo
 
         # Check if the table name matches the allowed pattern
         elif [[ ! $table_name =~ $allowed_pattern ]]; 
@@ -70,8 +72,10 @@ create_column(){
     if [[ $column_number -eq 1 ]]; 
     then
         PK_selected=true
+        echo
         echo "You created only 1 column, so it must be a PK column."
-        
+        echo
+
     else
         PK_selected=false
     fi
@@ -149,18 +153,26 @@ create_column(){
 
     # If no column is selected as PK, prompt the user to choose one
     if ! $PK_selected; then
+        echo
         echo "No primary key column was selected. Please choose one of the following columns to be the primary key as there must be a PK column:"
+        echo
+        
         for ((i = 0; i < ${#columns[@]}; i++)); do
             echo "$((i + 1)): ${columns[i]}"
         done
 
         while true; do
-            read -p "Enter the number of the column to be the primary key: " pk_choice
+            echo
+            read -p "  >  Enter the number of the column to be the primary key: " pk_choice
+            echo
+            
             if [[ $pk_choice =~ ^[1-9]+$ ]] && [[ $pk_choice -le ${#columns[@]} ]]; then
                 pks[$((pk_choice - 1))]="yes"
                 break
             else
+                echo
                 echo "Invalid input! Please enter a valid column number."
+                echo
             fi
         done
     fi

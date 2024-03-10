@@ -1,9 +1,15 @@
 #! /bin/bash
 
 dropDB () {
+
     allowed_pattern='^[A-Za-z0-9]+$'
-    while true; do
+
+    while true; 
+    do
+        echo
         read -rp " >   Enter DB you want to drop: " DB_name
+        echo
+        
         if [[ ! $DB_name =~ $allowed_pattern || $DB_name =~ ^[0-9] ]]; then
             echo  
             echo  
@@ -15,8 +21,10 @@ dropDB () {
         fi
     done
     
-    if [ -d "$DB_name" ]; then
+    if [ -d "$DB_name" ]; 
+    then
         rm -r "$DB_name"
+        
         echo  
         echo  
         echo "  ~~~ Database '$DB_name' dropped successfully. ~~~"

@@ -33,10 +33,12 @@ connecttoDB(){
         tables_menu     
 
     else
+        echo
         echo " !!! DB doesn't exist !!!"
+        echo
         source ./DBMS_Bash.sh
         main_menu
-        
+
     fi
 }
 
