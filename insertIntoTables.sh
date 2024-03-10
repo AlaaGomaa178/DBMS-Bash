@@ -205,4 +205,3 @@ insertIntoTable() {
     done
 }
 
-insertIntoTable
