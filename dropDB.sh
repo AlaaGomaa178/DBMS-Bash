@@ -1,22 +1,20 @@
 #! /bin/bash
 
 dropDB () {
+    allowed_pattern='^[A-Za-z0-9]+$'
     while true; do
         read -rp "Enter DB you want to drop: " DB_name
-        # Check if the input is empty or contains spaces
-        if [[ -z "$DB_name" ]]; then
-            echo "Input cannot be empty."
-        elif [[ "$DB_name" =~ [[:space:]] || ! "$DB_name" =~ ^[a-zA-Z0-9_]+$ ]]; then
-            echo "Input cannot contain spaces or special characters."
+        if [[ ! $DB_name =~ $allowed_pattern || $DB_name =~ ^[0-9] ]]; then
+            echo "Invalid name! Please enter a valid DB name without starting with a number and containing only letters and numbers."
         else
-            break  # Exit the loop if input is valid
+            break
         fi
     done
-    if [ -d $DB_name ];
-    then
-        rm -r $DB_name
-        echo "Dropped"
+    
+    if [ -d "$DB_name" ]; then
+        rm -r "$DB_name"
+        echo "Database '$DB_name' dropped successfully."
     else
-        echo " There is no DB named '$DB_name'"
+        echo "Database '$DB_name' does not exist."
     fi
 }
