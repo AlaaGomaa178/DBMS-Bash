@@ -1,7 +1,6 @@
 #!/bin/bash
 
 selectFromTable() {
-
     local db_name="$selected_db"
     
     # Prompt user to enter the table name
@@ -13,7 +12,6 @@ selectFromTable() {
     # Check (validation) on table name 
     if [[ $table_name =~ ^[a-zA-Z_][a-zA-Z0-9_]*$ ]]; 
     then
-        
         # Check if both data file and metadata file exist for the table
         if [[ -f "$db_name/$table_name" && -f "$db_name/$table_name.meta" ]]; 
         then
@@ -24,16 +22,13 @@ selectFromTable() {
                 select choice in "SelectAll" "SelectSpecificRow" "SelectColumns" "Back to Table Menu"; 
                 do
                     case $choice in
-                        
                         "SelectAll")
                             # Display all rows in the table
                             cat "$db_name/$table_name"
                             ;;
-                        
                         "SelectSpecificRow")
                             # Loop to allow user to select rows based on specific column values
                             continueFlag=true
-                            
                             while [[ $continueFlag == true ]]; 
                             do
                                 # Read metadata to get column names and positions
@@ -63,23 +58,44 @@ selectFromTable() {
                                             
                                             while true; 
                                             do
-                                                
                                                 # Prompt user to enter the value to select rows by
                                                 echo "Enter the value of '$cname' to select rows by it:"
                                                 read value
                                                 
                                                 # Check if the value exists in the selected column and print matching rows
-                                                awk -F':' -v col="$ColumnPosition" -v val="$value" '$col == val { print $0 }' "$db_name/$table_name" | 
+                                                matching_rows=$(awk -F':' -v col="$ColumnPosition" -v val="$value" '$col == val { print $0 }' "$db_name/$table_name")
                                                 
-                                                while IFS= read -r line; 
+                                                if [[ ! -z $matching_rows ]]; then
+                                                    echo "Matched Rows:"
+                                                    echo "$matching_rows"
+                                                else
+                                                    echo "No rows found with the specified value in the selected column."
+                                                fi
+                                                
+                                                # Ask user if they want to select another row
+                                                while true; 
                                                 do
-                                                    if [[ ! -z $line ]]; then
-                                                        echo "$line"
+                                                    echo "Do you want to select another row? Enter '1' to continue or '2' to cancel: "
+                                                    read answer
+
+                                                    if [[ $answer == "1" ]]; 
+                                                    then
+                                                        continueFlag=true
+                                                        break
+                                                    elif [[ $answer == "2" ]]; 
+                                                    then
+                                                        continueFlag=false  # Update flag to exit the loop
+                                                        break
                                                     else
-                                                        echo "Your condition didn't match any rows."
+                                                        echo "Invalid input! Please enter '1' to continue or '2' to cancel."
                                                     fi
                                                 done
-                                                break
+                                                
+                                                if [[ $continueFlag == false ]]; 
+                                                then
+                                                    break
+                                                fi
+                                                
                                             done
                                         else
                                             echo "Invalid input! This column does not exist."
@@ -90,20 +106,12 @@ selectFromTable() {
                                     fi
                                 done
                                 
-                                # Ask user if they want to select another row
-                                echo "Do you want to select another row? Enter 'y' to continue or any other key to cancel: "
-                                read answer
-
-                                if [[ $answer == "y" || $answer == "Y" ]]; 
+                                if [[ $continueFlag == false ]]; 
                                 then
-                                    continueFlag=true
-                                else
-                                    continueFlag=false  # Update flag to exit the loop
                                     break
                                 fi
                             done
                             ;;
-                            
                         "SelectColumns")
                             # Read metadata to get column names
                             source "$db_name/$table_name.meta"
@@ -127,26 +135,20 @@ selectFromTable() {
                                 echo "Invalid input! Please enter a valid column number."
                             fi
                             ;;
-                            
                         "Back to Table Menu")
                             source ./tablesMenu.sh
                             tables_menu
                             ;;
-                            
                     esac
                     break  # Break from the select loop after processing each choice
                 done
-                
             done
-            
         else
             echo "Table does not exist!"
         fi
-        
     else
         echo "Invalid input! Table name must start with a letter or underscore, followed by letters, digits, or underscores."
     fi
-
 }
 
 selectFromTable
