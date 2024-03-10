@@ -153,7 +153,6 @@ create_column(){
 
         # Append column details to the corresponding variables
         columns+=("$column_name")
-        dataTypes+=("$data_type")
         pks+=("$PK")
 
     done
@@ -188,11 +187,9 @@ create_column(){
     for ((i = 0; i < ${#columns[@]}; i++)); do
         if [[ $i -eq 0 ]]; then
             column_names="${columns[i]}"
-            data_type="${dataTypes[i]}"
             column_PK="${pks[i]}"
         else
             column_names+=":${columns[i]}"
-            data_type+=":${dataTypes[i]}"
             column_PK+=":${pks[i]}"
         fi
     done
