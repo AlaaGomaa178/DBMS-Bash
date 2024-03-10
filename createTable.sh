@@ -145,6 +145,12 @@ create_column(){
             PK="no"
         fi
 
+
+        if [[ $column_number -eq 1 ]]; 
+            then
+                PK="yes"
+        fi
+
         # Append column details to the corresponding variables
         columns+=("$column_name")
         pks+=("$PK")
