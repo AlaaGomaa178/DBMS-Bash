@@ -7,8 +7,10 @@ insertIntoTable() {
 
     while true; 
     do
-        echo "Please enter the name of the table where you want to insert data:"
+        echo
+        echo "  > Please enter the name of the table where you want to insert data:"
         read table_name
+        echo
 
         # Validate the table name 
         if [[ $table_name =~ ^[a-zA-Z_][a-zA-Z0-9_]*$ ]]; 
@@ -35,13 +37,6 @@ insertIntoTable() {
                         break
                     fi
                 done
-
-                # Check if a primary key column exists
-                if [[ $PK_index == -1 ]]; 
-                then
-                    echo "No primary key column found in the table metadata."
-                    break
-                fi
 
                 # ask the user to choose how to enter the primary key
                 if [[ ${column_data_types_array[PK_index]} == "String" ]]; 
