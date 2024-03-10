@@ -48,10 +48,10 @@ declare -i coloum_number
 
 while true; do
     read -p "Enter number of columns: " column_number
-    if [[ $column_number =~ ^[0-9]+$ ]]; then
+    if [[ $column_number =~ ^[1-9]+$ ]]; then
         break
     else
-        echo "Invalid input! Please enter numbers only."
+        echo "Invalid input! Please enter numbers from 1 -> 9 ."
     fi
 done
 
