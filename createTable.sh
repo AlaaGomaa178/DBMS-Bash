@@ -13,6 +13,7 @@ createTable(){
         # let the user to enter the table name
         read -p " >  Enter table name: " table_name
         
+        # Check if the table name already exists tell the user
         if [[ -e "$table_name" ]]; then
             echo "Table '$table_name' already exists. Please choose a different name."
 
