@@ -39,10 +39,20 @@ delete_from_table(){
                         echo "$(($i + 1)): ${column_names_array[i]}"
                     done
 
-                    # Prompt the user to choose the column for the condition
-                    echo
-                    read -rp "Enter the number of the column for the condition: " condition_column_num
-                    echo
+                    
+                    while true; do
+                        # Prompt the user to choose the column for the condition
+                        echo
+                        read -rp "Enter the number of the column for the condition: " condition_column_num
+                        echo
+
+                        if ! [[ $condition_column_num =~ ^[0-9]+$ ]] || [[ $condition_column_num -lt 1 ]] || [[ $condition_column_num -gt ${#column_names_array[@]} ]];
+                        then 
+                            echo "Invalid column number. Please enter a valid number."
+                        else 
+                            break
+                        fi
+                    done
 
                     # Prompt the user to enter the condition value for the selected column
                     echo
